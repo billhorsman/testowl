@@ -11,12 +11,11 @@ module Testowl
   class TestUnitRunner
 
     def run(files)
-      results = nil
-      begin
-        results = runDrb(files)
+      results = begin
+        runDrb(files)
       rescue
         puts "Drb not available. Running tests directly instead."
-        results = runDirectly(files)
+        runDirectly(files)
       end
       puts "Done"
       lines = results.split("\n")
@@ -26,15 +25,11 @@ module Testowl
         file_count, test_count, fail_count = counts.split(',').map(&:to_i)
         timing = lines.detect{|line| line =~ /Finished\sin/}
         timing = timing.sub(/Finished\sin/, '').strip if timing
-        if fail_count > 0
-          puts results
-        end
         return test_count, fail_count, timing
       else
         if exception_message
           raise exception_message
         else
-          $stderr.print results
           raise "Problem interpreting result. Please check the terminal output."
         end
       end
@@ -43,14 +38,17 @@ module Testowl
     def runDrb(files)
       DRb.start_service("druby://127.0.0.1:0") # this allows Ruby to do some magical stuff so you can pass an output stream over DRb.
       test_server = DRbObject.new_with_uri("druby://127.0.0.1:8988")
-      results = StringIO.new
-      test_server.run(files, $stderr, results)
-      results.string
+      results = TestOwl::Teeio.new
+      test_server.run(files, results, results)
+      results.output
     end
 
     def runDirectly(files)
-      `ruby #{files.join(' ')}`
+      results = TestOwl::Teeio.new
+      results.run "ruby #{files.join(' ')}"
+      results.output
     end
 
   end
+
 end

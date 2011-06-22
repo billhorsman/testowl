@@ -1,6 +1,8 @@
+require 'tempfile'
 require 'testowl/growl'
 require 'testowl/monitor'
 require 'testowl/rspec_runner'
+require 'testowl/teeio'
 require 'testowl/test_unit_runner'
 require 'testowl/tester'
 require 'testowl/version'
