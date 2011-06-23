@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
     "lib/testowl/growl.rb",
     "lib/testowl/monitor.rb",
     "lib/testowl/rspec_runner.rb",
+    "lib/testowl/teeio.rb",
     "lib/testowl/test_unit_runner.rb",
     "lib/testowl/tester.rb",
     "lib/testowl/version.rb",
