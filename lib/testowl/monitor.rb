@@ -29,6 +29,11 @@ module Testowl
         puts "Detected change in #{match[0]}"
         run_model(match[1], "triggered by #{match[0]}")
       end
+      # Watch controllers
+      script.watch("app/controllers/(.*)_controller\.rb") do |match|
+        puts "Detected change in #{match[0]}"
+        run_controller(match[1], "triggered by #{match[0]}")
+      end
       puts "Monitoring files..."
       Watchr::Controller.new(script, Watchr.handler.new).run
     end
@@ -43,6 +48,12 @@ module Testowl
       tester = Tester.new(@runner, reason)
       tester.add Dir["#{test_dir}/**/#{model_name}_#{test_suffix}.rb"]
       tester.add Dir["#{test_dir}/**/#{model_name.pluralize}_controller_#{test_suffix}.rb"]
+      tester.run
+    end
+
+    def run_controller(controller_name, reason)
+      tester = Tester.new(@runner, reason)
+      tester.add Dir["#{test_dir}/**/#{controller_name}_controller_#{test_suffix}.rb"]
       tester.run
     end
 
