@@ -3,7 +3,7 @@ module Testowl
 
     def run(files)
       results = runDirectly(files)
-      lines = results.output.split("\n")
+      lines = results.split("\n")
       exception_message = lines.detect{|line| line =~ /^Exception encountered/ }
       counts = lines.detect{|line| line =~ /(\d+)\sexamples?,\s(\d+)\sfailures?/ }
       if counts
