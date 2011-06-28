@@ -20,9 +20,10 @@ module Testowl
       puts "Done"
       lines = results.split("\n")
       exception_message = lines.detect{|line| line =~ /^Exception encountered/ }
-      counts = lines.detect{|line| line =~ /(\d+)\sassertions?,\s(\d+)\sfailures?/ }
+      counts = lines.detect{|line| line =~ /(\d+)\sassertions?,\s(\d+)\sfailures?,\s(\d+)\serrors?/ }
       if counts
-        file_count, test_count, fail_count = counts.split(',').map(&:to_i)
+        file_count, test_count, fail_count, error_count = counts.split(',').map(&:to_i)
+        fail_count += error_count # let's lump errors and failures together
         timing = lines.detect{|line| line =~ /Finished\sin/}
         timing = timing.sub(/Finished\sin/, '').strip if timing
         return test_count, fail_count, timing
