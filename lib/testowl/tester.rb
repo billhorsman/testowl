@@ -14,6 +14,7 @@ module Testowl
     def run
       test_count = 0
       fail_count = 0
+      seconds = 0
       files_run = []
       begin
         @files_list.each do |files|
@@ -21,20 +22,21 @@ module Testowl
           files_run += files
           test_count += result[0]
           fail_count += result[1]
+          seconds += result[2]
           break if fail_count > 0
         end
         if test_count == 0
-          Growl.grr "Empty Test", "No tests run", :error, files_run, @reason
+          Growl.grr "Empty Test", "No tests run", seconds, :error, files_run, @reason
           return false
         elsif fail_count > 0
-          Growl.grr "Fail", "#{fail_count} out of #{test_count} test#{'s' if test_count > 1} failed :(", :failed, files_run, @reason
+          Growl.grr "Fail", "#{fail_count} out of #{test_count} test#{'s' if test_count > 1} failed :(", seconds, :failed, files_run, @reason
           return false
         else
-          Growl.grr "Pass", "All #{test_count} example#{'s' if test_count > 1} passed :)", :success, files_run, @reason
+          Growl.grr "Pass", "All #{test_count} example#{'s' if test_count > 1} passed :)", seconds, :success, files_run, @reason
           return true
         end
       rescue => exc
-        Growl.grr "Exception", exc.message, :error, files_run, @reason
+        Growl.grr "Exception", exc.message, nil, :error, files_run, @reason
       end
     end
 

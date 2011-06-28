@@ -3,7 +3,7 @@ module Testowl
 
     Growlnotify = "growlnotify"
 
-    def self.grr(title, message, status, files, suffix)
+    def self.grr(title, message, seconds, status, files, suffix)
       project = File.expand_path(".").split("/").last
       growlnotify = `which #{Growlnotify}`.chomp
       if growlnotify == ''
@@ -14,9 +14,12 @@ module Testowl
           @warning_done = true
         end
       else
+        message_lines = [message.gsub("'", "`")]
+        message_lines << sprintf("(%0.1f seconds)", seconds) if seconds
+        message_lines << "#{files.map{|file| file.sub(/^spec\/[^\/]*\//, '').sub(/_test.rb$/, '')}.join("\n")}\n#{suffix}"
         options = []
         options << "-n Watchr"
-        options << "--message '#{message.gsub("'", "`")}\n\n#{files.map{|file| file.sub(/^spec\/[^\/]*\//, '').sub(/_test.rb$/, '')}.join("\n")}\n#{suffix}'"
+        options << "--message '#{message_lines.join("\n\n")}'"
         options << "--sticky" if status == :error
         options << "--image '#{image_path(status)}'"
         options << "--identifier #{Digest::MD5.hexdigest files.join}" # (used for coalescing)

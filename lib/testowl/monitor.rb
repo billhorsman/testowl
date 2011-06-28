@@ -8,10 +8,12 @@ module Testowl
         @runner = RspecRunner.new
         @test_dir = "spec"
         @test_suffix = "spec"
+        puts "TestOwl #{VERSION} has detected RSpec"
       elsif File.exist?("test/test_helper.rb")
         @runner = TestUnitRunner.new
         @test_dir = "test"
         @test_suffix = "test"
+        puts "TestOwl #{VERSION} has detected Test Unit"
       else
         raise "Can't find either spec_helper.rb or test_helper.rb and this owl is confused."
       end
@@ -34,7 +36,7 @@ module Testowl
         puts "Detected change in #{match[0]}"
         run_controller(match[1], "triggered by #{match[0]}")
       end
-      puts "Monitoring files..."
+      puts "Waiting for code changes..."
       Watchr::Controller.new(script, Watchr.handler.new).run
     end
 

@@ -3,20 +3,15 @@ module Testowl
 
     def run(files)
       results = runDirectly(files)
-      lines = results.split("\n")
-      exception_message = lines.detect{|line| line =~ /^Exception encountered/ }
-      counts = lines.detect{|line| line =~ /(\d+)\sexamples?,\s(\d+)\sfailures?/ }
-      if counts
-        test_count, fail_count = counts.split(',').map(&:to_i)
-        timing = lines.detect{|line| line =~ /Finished\sin/}
-        timing = timing.sub(/Finished\sin/, '').strip if timing
+      count_match = /(\d+)\sexamples?,\s(\d+)\sfailures?/.match(results)
+      timing_match = /Finished\sin\s([0-9\.]*)\sseconds/.match(results)
+      if count_match && timing_match
+        test_count = count_match[1].to_i
+        fail_count = count_match[2].to_i
+        timing = timing_match[1].to_f
         return test_count, fail_count, timing
       else
-        if exception_message
-          raise exception_message
-        else
-          raise "Problem interpreting result. Please check the terminal output."
-        end
+        raise "Problem interpreting result. Please check the terminal output."
       end
     end
       
