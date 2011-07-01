@@ -8,7 +8,8 @@ module Testowl
     end
 
     def add(files)
-      @files_list << [files].flatten
+      array = [files].flatten
+      @files_list << array unless array.empty?
     end
 
     def run
@@ -18,6 +19,7 @@ module Testowl
       files_run = []
       begin
         @files_list.each do |files|
+          puts "Running #{files.inspect}"
           result = @runner.run(files)
           files_run += files
           test_count += result[0]
@@ -25,7 +27,9 @@ module Testowl
           seconds += result[2]
           break if fail_count > 0
         end
-        if test_count == 0
+        if @files_list.empty?
+          puts "No tests found"
+        elsif test_count == 0
           Growl.grr "Empty Test", "No tests run", seconds, :error, files_run, @reason
           return false
         elsif fail_count > 0
