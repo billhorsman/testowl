@@ -21,7 +21,6 @@ module Testowl
         options = []
         options << "-n Watchr"
         options << "--message '#{message_lines.join("\n\n")}'"
-        options << "--sticky" if status == :error
         options << "--image '#{image_path(status)}'"
         options << "--identifier #{identifier}" # (used for coalescing)
         title = "TestOwl #{title} (#{project})"
