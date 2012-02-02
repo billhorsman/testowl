@@ -24,6 +24,7 @@ module Testowl
       script = Watchr::Script.new
       # Watch the scripts themselves
       script.watch("#{test_dir}/.*/*_#{test_suffix}\.rb") do |match|
+        system("clear")
         puts "Detected change in #{match[0]}"
         run_test(match[0])
       end
@@ -32,6 +33,7 @@ module Testowl
         if @options[:just_tests]
           puts "Ignoring change in #{match[0]}"
         else
+          system("clear")
           puts "Detected change in #{match[0]}"
           run_model(match[1], "triggered by #{match[0]}")
         end
@@ -41,6 +43,7 @@ module Testowl
         if @options[:just_tests]
           puts "Ignoring change in #{match[0]}"
         else
+          system("clear")
           puts "Detected change in #{match[0]}"
           run_controller(match[1], "triggered by #{match[0]}")
         end
