@@ -3,7 +3,8 @@ module Testowl
 
     attr_reader :test_dir, :test_suffix
 
-    def initialize()
+    def initialize(options)
+      @options = options
       if File.exist?("spec/spec_helper.rb")
         @runner = RspecRunner.new
         @test_dir = "spec"
@@ -28,13 +29,21 @@ module Testowl
       end
       # Watch models
       script.watch("app/models/(.*)\.rb") do |match|
-        puts "Detected change in #{match[0]}"
-        run_model(match[1], "triggered by #{match[0]}")
+        if @options[:just_tests]
+          puts "Ignoring change in #{match[0]}"
+        else
+          puts "Detected change in #{match[0]}"
+          run_model(match[1], "triggered by #{match[0]}")
+        end
       end
       # Watch controllers
       script.watch("app/controllers/(.*)_controller\.rb") do |match|
-        puts "Detected change in #{match[0]}"
-        run_controller(match[1], "triggered by #{match[0]}")
+        if @options[:just_tests]
+          puts "Ignoring change in #{match[0]}"
+        else
+          puts "Detected change in #{match[0]}"
+          run_controller(match[1], "triggered by #{match[0]}")
+        end
       end
       puts "Waiting for code changes..."
       Watchr::Controller.new(script, Watchr.handler.new).run

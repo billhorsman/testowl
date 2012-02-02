@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'testowl'
+require 'optparse'
 require 'active_support/inflector'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib') unless $LOAD_PATH.include?(File.dirname(__FILE__) + '/../lib')
@@ -8,7 +9,19 @@ CONFIG = File.dirname(__FILE__) + '/../lib/testowl/config.rb'
 
 
 begin
-  success = Testowl::Monitor.new.run
+  options = {}
+  OptionParser.new do|opts|
+    opts.banner = "Usage: testowl [options]"
+    options[:just_tests] = false
+    opts.on('-j', '--just-tests', "Just run tests, no heuristics") do |v|
+      options[:just_tests] = v
+    end
+    opts.on( '-h', '--help', 'Display this screen' ) do
+     puts opts
+     exit
+   end
+  end.parse!
+  success = Testowl::Monitor.new(options).run
   Kernel.exit 1 unless success
 rescue SystemExit => e
   Kernel.exit(e.status)
