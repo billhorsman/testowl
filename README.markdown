@@ -4,10 +4,10 @@ TestOwl
 ![TestOwl](https://github.com/billhorsman/testowl/raw/master/images/testowl.png)
 
 Narrow Minded TestUnit/RSpec, Watchr and Growl Integration for Continuous Testing. TestOwl assumes you are running Rails and makes some guesses about what tests depend on what files. For instance, if you change model Foo then it looks for foo_test.rb and foos_controller_test.rb.
-   
+
 At the very least, it will run each test every time you save it.
 
-Usage 
+Usage
 ==
 
 From Rails root:
@@ -23,13 +23,22 @@ Dependencies
 
 It uses [growlnotifiy](http://growl.info/extras.php) to send messages to Growl. If you don't have it installed then it will only write a message to your terminal. To get the full benefit of TestOwl you should definitely install growlnotify.
 
+UPDATE: It now tries terminal-notifier first and uses that if it is present. The terminal-notifier gem will send messages to Mountain Lion's notification centre.
+
+For example:
+
+    group :test do
+      gem 'terminal-notifier'
+      gem 'testowl'
+    end
+
 Bundler
 ==
 
 To install using Bundler:
 
     group :test do
-      gem 'testowl', :git => "git@github.com:billhorsman/testowl.git"
+      gem 'testowl'
     end
 
 RSpec
