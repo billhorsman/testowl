@@ -7,6 +7,11 @@ Narrow Minded TestUnit/RSpec, Watchr and Growl Integration for Continuous Testin
 
 At the very least, it will run each test every time you save it.
 
+Alternatives
+=
+
+I've had a lot of success recently with [Guard](https://github.com/guard/guard), especially when linked with [rb-fsevent](https://github.com/thibaudgg/rb-fsevent) and [terminal-notifier-guard](https://github.com/Springest/terminal-notifier-guard). I strongly suggest you consider using Guard instead :)
+
 Usage
 ==
 
